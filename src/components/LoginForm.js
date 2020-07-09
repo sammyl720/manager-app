@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Card, CardSection, Input, Button, Header } from './common'
+import { Card, CardSection, Input, Button, Header, Spinner } from './common'
+import { View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import * as actions from '../actions'
 import { Alert } from 'react-native'
@@ -9,13 +10,36 @@ class LoginForm extends Component {
     // console.log('change text', text)
     this.props.emailChanged(text)
   }
+
+  onButtonPress() {
+    const { email, password } = this.props.auth
+    this.props.loginUser({ email, password })
+  }
+
   onPasswordChange(text) {
     // console.log('change text', text)
     this.props.passwordChanged(text)
   }
 
+  renderButton() {
+    if (this.props.auth.loading) {
+      return <Spinner size='large' />
+    } else {
+      return <Button onPress={this.onButtonPress.bind(this)}>Login</Button>
+    }
+  }
+
+  renderError() {
+    if (this.props.auth.error) {
+      return (
+        <View style={{ background: 'white' }}>
+          <Text style={styles.errorTextStyle}>{this.props.auth.error}</Text>
+        </View>
+      )
+    }
+  }
+
   render() {
-    console.log(this.props)
     return (
       <Card>
         <Header headerText='Login to Manager App' />
@@ -36,14 +60,20 @@ class LoginForm extends Component {
             onChangeText={this.onPasswordChange.bind(this)}
           />
         </CardSection>
-        <CardSection>
-          <Button>Login</Button>
-        </CardSection>
+        {this.renderError()}
+        <CardSection>{this.renderButton()}</CardSection>
       </Card>
     )
   }
 }
 
+const styles = {
+  errorTextStyle: {
+    fontSize: 20,
+    alignSelf: 'center',
+    color: 'red'
+  }
+}
 const mapStateToProps = (state, ownProps) => {
   // console.log(state)
   return {
