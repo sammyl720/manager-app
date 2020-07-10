@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, CardSection, Input, Button, Header, Spinner } from './common'
+import { Card, CardSection, Input, Button, Spinner } from './common'
 import { View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import * as actions from '../actions'
@@ -42,7 +42,6 @@ class LoginForm extends Component {
   render() {
     return (
       <Card>
-        <Header headerText='Login to Manager App' />
         <CardSection>
           <Input
             value={this.props.auth.email}
